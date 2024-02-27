@@ -13,8 +13,8 @@ namespace GestorPagosApi.DTOs
 
         public int IdRol { get; set; }
 
-        public RolDTO IdRolNavigation { get; set; } = new();
-        public ICollection<JugadorDTO> Jugador { get; set; } = new List<JugadorDTO>();
+        public RolDTO? IdRolNavigation { get; set; } 
+        public ICollection<JugadorDTO>? Jugador { get; set; }
 
     }
 }

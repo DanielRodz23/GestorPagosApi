@@ -7,6 +7,6 @@ namespace GestorPagosApi.DTOs
 
         public string NombreCategoria { get; set; } = null!;
 
-        public ICollection<TemporadaDTO> Temporada { get; set; } 
+        public ICollection<TemporadaDTO>? Temporada { get; set; } 
     }
 }

@@ -12,6 +12,10 @@ namespace GestorPagosApi.Mappers
             CreateMap<Usuarios, UsuarioDTO>();
             CreateMap<Roles, RolDTO>();
             CreateMap<Jugador, JugadorDTO>();
+            CreateMap<Categoria, CategoriaDTO>();
+            CreateMap<CategoriaDTO, Categoria>();
+            CreateMap<UsuarioDTO, Usuarios>();
+
         }
     }
 }

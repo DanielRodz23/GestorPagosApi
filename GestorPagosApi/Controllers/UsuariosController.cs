@@ -26,13 +26,6 @@ namespace GestorPagosApi.Controllers
             this.mapper = mapper;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Usuarios>>> GetUsuarios()
-        //{
-        //    var datos = await repository.GetAllUsuariosInclude();
-
-        //    return Ok(datos);
-        //}
 
         [HttpGet]
         public async Task<IActionResult> GetUsuarios()
@@ -62,6 +55,35 @@ namespace GestorPagosApi.Controllers
             //    }).ToList()
             //});
             return Ok(users);
+        }
+        [HttpGet("JustUsers")]
+        public async Task<IActionResult> GetSoloUsuarios()
+        {
+            var proye =  repository.GetAll();
+            var data = mapper.Map<IEnumerable<UsuarioDTO>>(proye);
+            return Ok(data);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUsuarios(int id)
+        {
+            var user = await repository.GetAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var data = mapper.Map<UsuarioDTO>(user);
+            return Ok(data);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostUsuarios(UsuarioDTO usuarios)
+        {
+            if (usuarios == null)
+            {
+                return NotFound();
+            }
+            var data = mapper.Map<Usuarios>(usuarios);
+            repository.Insert(data);
+            return Ok(data);
         }
     }
 }

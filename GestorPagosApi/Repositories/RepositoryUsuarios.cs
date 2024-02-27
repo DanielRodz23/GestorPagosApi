@@ -37,6 +37,13 @@ namespace GestorPagosApi.Repositories
             //    })
             //    .ToListAsync();
         }
+        public async Task<Usuarios?> GetAsync(int id)
+        {
+            return await ctx.Usuarios
+                .Include(x=>x.Jugador)
+                .Include(x=>x.IdRolNavigation)
+                .FirstOrDefaultAsync(x=>x.IdUsuario==id);
+        }
 
     }
 }
