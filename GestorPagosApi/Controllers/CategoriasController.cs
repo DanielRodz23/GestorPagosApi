@@ -19,6 +19,15 @@ namespace GestorPagosApi.Controllers
             this.repository = repository;
             this.mapper = mapper;
         }
+        [HttpGet]
+        public async Task<IActionResult> GetCategories()
+        {
+            var cats = repository.GetAll();
+            if (cats == null) { return NotFound(); }
+            var data = mapper.Map<IEnumerable<CategoriaDTO>>(cats);
+            return Ok(data);
+
+        }
         [HttpPost]
         public async Task<IActionResult> PostCtaegoria(CategoriaDTO categoria)
         {
