@@ -11,6 +11,6 @@ namespace GestorPagosApi.DTOs
 
         public decimal CantidadPago { get; set; }
 
-        public JugadorDTO IdJugadorNavigation { get; set; } 
+        //public JugadorDTO? IdJugadorNavigation { get; set; } 
     }
 }

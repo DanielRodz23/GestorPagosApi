@@ -20,8 +20,10 @@ builder.Services.AddDbContext<ClubDeportivoContext>(option => option.UseMySql(ca
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddTransient<Repository<Categoria>>();
-builder.Services.AddTransient<Repository<Usuarios>>();
+//builder.Services.AddTransient<Repository<Usuarios>>();
 builder.Services.AddTransient<RepositoryUsuarios>();
+builder.Services.AddTransient<RepositoryJugadores>();
+builder.Services.AddTransient<RepositoryPagos>();
 
 
 var app = builder.Build();

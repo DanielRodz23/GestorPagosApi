@@ -21,6 +21,10 @@ namespace GestorPagosApi.Mappers
             CreateMap<Categoria, CategoriaDTO>();
             CreateMap<CategoriaDTO, Categoria>();
 
+            CreateMap<Pago, PagoDTO>();
+            CreateMap<PagoDTO, Pago>();
+
+
         }
     }
 }

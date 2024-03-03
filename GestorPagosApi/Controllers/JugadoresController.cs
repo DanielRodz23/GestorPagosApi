@@ -18,7 +18,7 @@ namespace GestorPagosApi.Controllers
             this.repository = repository;
             this.mapper = mapper;
         }
-
+        [HttpGet]
         public async Task<IActionResult> GetJugadores()
         {
             var proye = await repository.GetAllAsync();
@@ -26,6 +26,13 @@ namespace GestorPagosApi.Controllers
             var datos = mapper.Map<IEnumerable<JugadorDTO>>(proye);
             
             return Ok(datos);
+        }
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> GetJugadoresDeUsuario(int id)
+        {
+            var data = await repository.GetJugadoresDeUsuario(id);
+            if (data == null) return BadRequest(new {mensaje = "No existe un responsable con ese ID"});
+            return Ok(data);
         }
     }
 }
