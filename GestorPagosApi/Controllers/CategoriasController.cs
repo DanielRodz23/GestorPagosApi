@@ -28,6 +28,7 @@ namespace GestorPagosApi.Controllers
             return Ok(data);
 
         }
+        
         [HttpPost]
         public async Task<IActionResult> PostCtaegoria(CategoriaDTO categoria)
         {

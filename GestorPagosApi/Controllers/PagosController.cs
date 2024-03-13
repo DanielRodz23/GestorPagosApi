@@ -26,11 +26,13 @@ namespace GestorPagosApi.Controllers
         [HttpGet("PagosByResponsable/{id}")]
         public async Task<IActionResult> GetPagosByResponsable(int id)
         {
+            //Obtiene el usuario con include de los jugadores y sus pagos
             var datos = await repository.GetPagosByResponsable(id);
             if (datos==null) return NotFound();
 
-            var pagos = mapper.Map<IEnumerable<JugadorDTO>>(datos);
-            return Ok(pagos);
+            //Convierte la consulta en un dto de usuario
+            var user = mapper.Map<UsuarioDTO>(datos);
+            return Ok(user);
         }
         [HttpGet("PagosByJugador/{id}")]
         public async Task<IActionResult> GetPagosByJugador(int id)
@@ -41,7 +43,7 @@ namespace GestorPagosApi.Controllers
             var pagos = mapper.Map<IEnumerable<PagoDTO>>(datos);
             return Ok(pagos);
         }
-        [HttpGet("{id}")]
+        [HttpGet("Pago/{id}")]
         public async Task<IActionResult> GetPago(int id)
         {
             var pago = repository.Get(id);

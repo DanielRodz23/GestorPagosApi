@@ -3,6 +3,7 @@ using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,17 @@ builder.Services.AddTransient<RepositoryUsuarios>();
 builder.Services.AddTransient<RepositoryJugadores>();
 builder.Services.AddTransient<RepositoryPagos>();
 
+builder.Services.AddAuthentication(x=>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(x=>{
+    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters{
+        
+    };
+});
 
 var app = builder.Build();
 
@@ -37,6 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

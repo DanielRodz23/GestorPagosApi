@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +28,37 @@ namespace GestorPagosApi.Controllers
             
             return Ok(datos);
         }
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetJugadoresDeUsuario(int id)
         {
             var data = await repository.GetJugadoresDeUsuario(id);
             if (data == null) return BadRequest(new {mensaje = "No existe un responsable con ese ID"});
             return Ok(data);
         }
+        [HttpPost]
+        public async Task<IActionResult> PostJugadores(JugadorDTO jugador){
+            if (jugador==null)
+            {
+                return BadRequest(new {mensaje = "Contenido incorrecto"});
+            }
+
+            var jug = mapper.Map<Jugador>(jugador);
+            repository.Insert(jug);
+            var returndata = mapper.Map<JugadorDTO>(jug);
+            return Ok(returndata);
+        }
+        [HttpPut]
+        public async Task<IActionResult> PutJugadores(JugadorDTO jugador)
+        {
+            if (jugador==null)
+            {
+                return BadRequest(new { mensaje = "Contenido incorrecto"});                
+            }
+            var dato = mapper.Map<Jugador>(jugador);
+            repository.Update(dato);
+            var returdata = mapper.Map<JugadorDTO>(dato);
+            return Ok(returdata);
+        }
+        
     }
 }

@@ -13,9 +13,9 @@ namespace GestorPagosApi.Repositories
             //return ctx.Pago.Where(x=>x.)
             return await ctx.Pago.Where(x=>x.IdJugador==id).ToListAsync();
         }
-        public async Task<IEnumerable<Jugador>> GetPagosByResponsable(int id){
+        public async Task<Usuarios?> GetPagosByResponsable(int id){
             //Regresar una lista de jugadores que incluya los pagos
-            return await ctx.Jugador.Include(x=>x.Pago).Where(x=>x.IdUsuario==id).ToListAsync();
+            return await ctx.Usuarios.Include(x=>x.Jugador).ThenInclude(x=>x.Pago).Where(x=>x.IdUsuario==id).FirstOrDefaultAsync();
             //return ctx.Usuarios.Include(x=>x.)
         }
     }
