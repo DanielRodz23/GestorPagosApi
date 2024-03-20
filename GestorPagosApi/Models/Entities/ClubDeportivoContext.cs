@@ -21,15 +21,17 @@ public partial class ClubDeportivoContext : DbContext
 
     public virtual DbSet<Pago> Pago { get; set; }
 
+    public virtual DbSet<Registro> Registro { get; set; }
+
     public virtual DbSet<Roles> Roles { get; set; }
 
     public virtual DbSet<Temporada> Temporada { get; set; }
 
     public virtual DbSet<Usuarios> Usuarios { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseMySql("server=labsystec.net;user=labsyste_clubDep;database=clubDeportivo;password=8We0ds?20", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.3-mariadb"));
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=labsystec.net;user=labsyste_clubDep;database=clubDeportivo;password=8We0ds?20", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.6-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,6 +62,9 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.IdJugador).HasColumnType("int(11)");
             entity.Property(e => e.Deuda).HasPrecision(10);
             entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.Exists)
+                .HasDefaultValueSql("b'1'")
+                .HasColumnType("bit(1)");
             entity.Property(e => e.IdTemporada).HasColumnType("int(11)");
             entity.Property(e => e.IdUsuario).HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
@@ -82,15 +87,36 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.HasIndex(e => e.IdJugador, "pago_jugador_FK");
 
+            entity.HasIndex(e => e.IdResponsable, "pago_usuarios_FK");
+
             entity.Property(e => e.IdPago).HasColumnType("int(11)");
             entity.Property(e => e.CantidadPago).HasPrecision(10);
             entity.Property(e => e.FechaPago).HasColumnType("datetime");
             entity.Property(e => e.IdJugador).HasColumnType("int(11)");
+            entity.Property(e => e.IdResponsable).HasColumnType("int(11)");
 
             entity.HasOne(d => d.IdJugadorNavigation).WithMany(p => p.Pago)
                 .HasForeignKey(d => d.IdJugador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("pago_jugador_FK");
+
+            entity.HasOne(d => d.IdResponsableNavigation).WithMany(p => p.Pago)
+                .HasForeignKey(d => d.IdResponsable)
+                .HasConstraintName("pago_usuarios_FK");
+        });
+
+        modelBuilder.Entity<Registro>(entity =>
+        {
+            entity.HasKey(e => e.IdRegistro).HasName("PRIMARY");
+
+            entity.ToTable("registro");
+
+            entity.Property(e => e.IdRegistro)
+                .HasColumnType("int(11)")
+                .HasColumnName("Id_Registro");
+            entity.Property(e => e.Descripcion).HasColumnType("text");
+            entity.Property(e => e.FechaEjecucion).HasColumnType("datetime");
+            entity.Property(e => e.Titulo).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Roles>(entity =>
@@ -117,6 +143,9 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.FechaInicio).HasColumnType("datetime");
             entity.Property(e => e.IdCategoria).HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.TempActual)
+                .HasDefaultValueSql("b'1'")
+                .HasColumnType("bit(1)");
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Temporada)
                 .HasForeignKey(d => d.IdCategoria)
@@ -137,6 +166,9 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.Contrasena)
                 .HasMaxLength(64)
                 .IsFixedLength();
+            entity.Property(e => e.Exists)
+                .HasDefaultValueSql("b'1'")
+                .HasColumnType("bit(1)");
             entity.Property(e => e.IdRol)
                 .HasDefaultValueSql("'2'")
                 .HasColumnType("int(11)");

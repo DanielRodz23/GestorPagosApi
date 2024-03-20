@@ -18,7 +18,11 @@ public partial class Usuarios
 
     public int IdRol { get; set; }
 
+    public ulong Exists { get; set; }
+
     public virtual Roles IdRolNavigation { get; set; } = null!;
 
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();
+
+    public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
 }

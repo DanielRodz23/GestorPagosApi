@@ -17,6 +17,8 @@ public partial class Temporada
 
     public decimal Costo { get; set; }
 
+    public ulong TempActual { get; set; }
+
     public virtual Categoria? IdCategoriaNavigation { get; set; }
 
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();

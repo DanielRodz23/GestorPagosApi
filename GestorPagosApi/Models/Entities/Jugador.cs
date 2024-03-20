@@ -20,6 +20,8 @@ public partial class Jugador
 
     public decimal Deuda { get; set; }
 
+    public ulong Exists { get; set; }
+
     public virtual Temporada? IdTemporadaNavigation { get; set; }
 
     public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;

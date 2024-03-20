@@ -49,7 +49,7 @@ namespace GestorPagosApi.Controllers
             var pago = repository.Get(id);
             if (pago == null)
             {
-                return NotFound();
+                return NotFound(new {mensaje = $"Pago con Id: {id} no existe en la base de datos"});
             }
             var dato = mapper.Map<PagoDTO>(pago);
             return Ok(dato);

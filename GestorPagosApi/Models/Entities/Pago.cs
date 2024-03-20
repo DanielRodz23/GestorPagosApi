@@ -13,5 +13,9 @@ public partial class Pago
 
     public decimal CantidadPago { get; set; }
 
+    public int? IdResponsable { get; set; }
+
     public virtual Jugador IdJugadorNavigation { get; set; } = null!;
+
+    public virtual Usuarios? IdResponsableNavigation { get; set; }
 }

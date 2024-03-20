@@ -10,7 +10,5 @@ Jugadores
 Pagos
 	Eliminar (fisica)
 
-Agregar referencia al Usuario Responsable en la tabla pagos
 Cambiar endpoint para que retorne la informacion completa del responsable
 Hacer include en endpoint de pago especifico
-Tabla de registros
