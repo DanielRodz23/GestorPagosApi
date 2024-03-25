@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
+using GestorPagosApi.Models.LoginModel;
 
 namespace GestorPagosApi.Mappers
 {
@@ -24,7 +25,8 @@ namespace GestorPagosApi.Mappers
             CreateMap<Pago, PagoDTO>();
             CreateMap<PagoDTO, Pago>();
 
-
+            CreateMap<LoginModel, LogInDTO>();
+            CreateMap<LogInDTO, LoginModel>();
         }
     }
 }

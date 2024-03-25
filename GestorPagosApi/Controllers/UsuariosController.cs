@@ -2,6 +2,7 @@
 using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Text.Unicode;
 
 namespace GestorPagosApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase

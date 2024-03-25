@@ -2,11 +2,13 @@
 using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorPagosApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase

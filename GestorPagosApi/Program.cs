@@ -4,6 +4,8 @@ using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string cadena = "server = labsystec.net;user = labsyste_clubDep; database = clubDeportivo; password = 8We0ds?20";
+var cadena = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("Conexion.json")
+               .Build()
+               .GetConnectionString("NeatConnection");
 
 builder.Services.AddDbContext<ClubDeportivoContext>(option => option.UseMySql(cadena, ServerVersion.AutoDetect(cadena)));
 
@@ -26,17 +32,23 @@ builder.Services.AddTransient<RepositoryUsuarios>();
 builder.Services.AddTransient<RepositoryJugadores>();
 builder.Services.AddTransient<RepositoryPagos>();
 
-builder.Services.AddAuthentication(x=>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x=>{
+    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
-        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-).AddJwtBearer(x=>{
-    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters{
-        
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+
+// builder.Services.AddAuthorization(x=>{
+//     x.AddPolicy("")
+// });
 
 var app = builder.Build();
 
