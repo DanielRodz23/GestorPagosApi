@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using GestorPagosApi.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,23 +33,27 @@ builder.Services.AddTransient<RepositoryUsuarios>();
 builder.Services.AddTransient<RepositoryJugadores>();
 builder.Services.AddTransient<RepositoryPagos>();
 
+var jwtconfig = new ConfigurationBuilder()
+    .AddJsonFile("jwtsettings.json")
+    .Build();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x=>{
-    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        ValidIssuer = jwtconfig["Jwt:Issuer"],
+        ValidAudience = jwtconfig["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtconfig["Jwt:Key"]))
     };
 });
 
-// builder.Services.AddAuthorization(x=>{
-//     x.AddPolicy("")
-// });
+builder.Services.AddAuthorization(x=>{
+    x.AddPolicy(IdentityData.AdminUserPolicyName, p => p.RequireClaim(IdentityData.AdminUserClaimName, "true"));
+});
 
 var app = builder.Build();
 

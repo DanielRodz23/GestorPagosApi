@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Identity;
 using GestorPagosApi.Models.LoginModel;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,15 @@ namespace GestorPagosApi.Controllers
     [Route("api/[controller]")]
     public class LogInController : ControllerBase
     {
-        public LogInController(RepositoryUsuarios repositoryUsuarios, IMapper mapper, IConfiguration configuration)
+        public LogInController(RepositoryUsuarios repositoryUsuarios, IMapper mapper)
         {
             this.repositoryUsuarios = repositoryUsuarios;
             this.mapper = mapper;
-            this.configuration = configuration;
         }
         private readonly RepositoryUsuarios repositoryUsuarios;
         private readonly IMapper mapper;
-        private readonly IConfiguration configuration;
+
+        JwtSecurityTokenHandler TokenHandler = new JwtSecurityTokenHandler();
 
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginModel model)
@@ -35,25 +36,41 @@ namespace GestorPagosApi.Controllers
 
             var usr = mapper.Map<UsuarioDTO>(data);
             
+            var configuration = new ConfigurationBuilder()
+    .AddJsonFile("jwtsettings.json")
+    .Build();
+
             var jwt = configuration.GetSection("Jwt").Get<JwtModel>();
 
-            var claims = new []{
+            var claims = new List<Claim>{
                 new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                new Claim("rol", usr.IdRolNavigation.NombreRol),
                 new Claim("id", usr.IdUsuario.ToString())
             };
+            if (data.IdRolNavigation.NombreRol==IdentityData.AdminUserClaimName)
+            {
+                claims.Add(new Claim(IdentityData.AdminUserClaimName, "true"));  
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
             var signin = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-            var token = new JwtSecurityToken(
-                jwt.Issuer, 
-                jwt.Audience, 
-                claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: signin
-                );
-            UserDTOToken usrtoken = new(){ TokenString = new JwtSecurityTokenHandler().WriteToken(token)};
+            // var token = new JwtSecurityToken(
+            //     jwt.Issuer, 
+            //     jwt.Audience, 
+            //     claims,
+            //     expires: DateTime.Now.AddMinutes(10),
+            //     signingCredentials: signin
+            //     );
+            var tokendescriptor = new SecurityTokenDescriptor{
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(10),
+                Issuer = jwt.Issuer,
+                Audience = jwt.Audience,
+                SigningCredentials = signin
+            };
+            var token = TokenHandler.CreateToken(tokendescriptor);
+            var response = TokenHandler.WriteToken(token);
+            UserDTOToken usrtoken = new(){ TokenString = response};
             return Ok(usrtoken);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +15,6 @@ using System.Text.Unicode;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
@@ -28,7 +28,7 @@ namespace GestorPagosApi.Controllers
             this.mapper = mapper;
         }
 
-
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpGet]
         public async Task<IActionResult> GetUsuarios()
         {
