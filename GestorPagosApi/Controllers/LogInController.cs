@@ -52,6 +52,15 @@ namespace GestorPagosApi.Controllers
             {
                 claims.Add(new Claim(IdentityData.AdminUserClaimName, "true"));  
             }
+            else if (data.IdRolNavigation.NombreRol==IdentityData.TesoreroUserClaimName)
+            {
+                claims.Add(new Claim(IdentityData.TesoreroUserClaimName, "true"));  
+            }
+            else if (data.IdRolNavigation.NombreRol==IdentityData.ResponsableUserClaimName)
+            {
+                claims.Add(new Claim(IdentityData.ResponsableUserClaimName, "true"));  
+            }
+            
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
             var signin = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             // var token = new JwtSecurityToken(

@@ -362,4 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+#Cadena de conexion de la base de datos
 Conexion.json
+
+#JSON de configuracion de JWT para la autenticacion
+jwtsettings.json
