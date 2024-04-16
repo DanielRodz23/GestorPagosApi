@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TemporadasController : ControllerBase

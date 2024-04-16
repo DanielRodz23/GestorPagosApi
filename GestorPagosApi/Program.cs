@@ -53,6 +53,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(x=>{
     x.AddPolicy(IdentityData.AdminUserPolicyName, p => p.RequireClaim(IdentityData.AdminUserClaimName, "true"));
+    x.AddPolicy(IdentityData.TesoreroUserPolicyName, p => p.RequireClaim(IdentityData.TesoreroUserClaimName, "true"));
+    x.AddPolicy(IdentityData.ResponsableUserPolicyName, p => p.RequireClaim(IdentityData.ResponsableUserClaimName, "true"));
 });
 
 var app = builder.Build();

@@ -58,6 +58,7 @@ namespace GestorPagosApi.Controllers
             //});
             return Ok(users);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpGet("JustUsers")]
         public async Task<IActionResult> GetSoloUsuarios()
         {
@@ -65,6 +66,7 @@ namespace GestorPagosApi.Controllers
             var data = mapper.Map<IEnumerable<UsuarioDTO>>(proye);
             return Ok(data);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsuarios(int id)
         {
@@ -76,6 +78,7 @@ namespace GestorPagosApi.Controllers
             var data = mapper.Map<UsuarioDTO>(user);
             return Ok(data);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost]
         public async Task<IActionResult> PostUsuarios(UsuarioDTO usuarios)
         {

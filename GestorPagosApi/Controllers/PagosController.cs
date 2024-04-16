@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ using NuGet.Protocol.Core.Types;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class PagosController : ControllerBase
