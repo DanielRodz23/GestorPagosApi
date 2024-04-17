@@ -26,5 +26,7 @@ public partial class Jugador
 
     public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
 
+    public virtual ICollection<JugadoresTemporada> JugadoresTemporada { get; set; } = new List<JugadoresTemporada>();
+
     public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
 }

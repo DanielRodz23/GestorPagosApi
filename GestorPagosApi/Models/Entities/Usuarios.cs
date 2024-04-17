@@ -20,6 +20,10 @@ public partial class Usuarios
 
     public ulong Exists { get; set; }
 
+    public string? Telefono { get; set; }
+
+    public string? Correo { get; set; }
+
     public virtual Roles IdRolNavigation { get; set; } = null!;
 
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();

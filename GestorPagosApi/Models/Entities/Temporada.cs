@@ -22,4 +22,6 @@ public partial class Temporada
     public virtual Categoria? IdCategoriaNavigation { get; set; }
 
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();
+
+    public virtual ICollection<JugadoresTemporada> JugadoresTemporada { get; set; } = new List<JugadoresTemporada>();
 }

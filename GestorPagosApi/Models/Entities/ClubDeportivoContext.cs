@@ -19,6 +19,8 @@ public partial class ClubDeportivoContext : DbContext
 
     public virtual DbSet<Jugador> Jugador { get; set; }
 
+    public virtual DbSet<JugadoresTemporada> JugadoresTemporada { get; set; }
+
     public virtual DbSet<Pago> Pago { get; set; }
 
     public virtual DbSet<Registro> Registro { get; set; }
@@ -42,6 +44,8 @@ public partial class ClubDeportivoContext : DbContext
             entity.ToTable("categoria");
 
             entity.Property(e => e.IdCategoria).HasColumnType("int(11)");
+            entity.Property(e => e.EdadInicial).HasColumnType("int(11)");
+            entity.Property(e => e.EdadTermino).HasColumnType("int(11)");
             entity.Property(e => e.NombreCategoria).HasMaxLength(50);
         });
 
@@ -73,6 +77,31 @@ public partial class ClubDeportivoContext : DbContext
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("jugador_responsable_FK");
+        });
+
+        modelBuilder.Entity<JugadoresTemporada>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("jugadores_temporada");
+
+            entity.HasIndex(e => e.IdJugador, "Jugadores_Temporada_jugador_FK");
+
+            entity.HasIndex(e => e.IdTemporada, "Jugadores_Temporada_temporada_FK");
+
+            entity.Property(e => e.Id).HasColumnType("int(11)");
+            entity.Property(e => e.IdJugador).HasColumnType("int(11)");
+            entity.Property(e => e.IdTemporada).HasColumnType("int(11)");
+
+            entity.HasOne(d => d.IdJugadorNavigation).WithMany(p => p.JugadoresTemporada)
+                .HasForeignKey(d => d.IdJugador)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Jugadores_Temporada_jugador_FK");
+
+            entity.HasOne(d => d.IdTemporadaNavigation).WithMany(p => p.JugadoresTemporada)
+                .HasForeignKey(d => d.IdTemporada)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Jugadores_Temporada_temporada_FK");
         });
 
         modelBuilder.Entity<Pago>(entity =>
@@ -162,6 +191,7 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.Contrasena)
                 .HasMaxLength(64)
                 .IsFixedLength();
+            entity.Property(e => e.Correo).HasMaxLength(80);
             entity.Property(e => e.Exists)
                 .HasDefaultValueSql("b'1'")
                 .HasColumnType("bit(1)");
@@ -169,6 +199,7 @@ public partial class ClubDeportivoContext : DbContext
                 .HasDefaultValueSql("'2'")
                 .HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.Telefono).HasMaxLength(20);
             entity.Property(e => e.Usuario).HasMaxLength(100);
 
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)

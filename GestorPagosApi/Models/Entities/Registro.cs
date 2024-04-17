@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace GestorPagosApi.Models.Entities;
 
 public partial class Registro
