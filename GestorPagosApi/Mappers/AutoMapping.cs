@@ -27,6 +27,9 @@ namespace GestorPagosApi.Mappers
 
             CreateMap<LoginModel, LogInDTO>();
             CreateMap<LogInDTO, LoginModel>();
+
+            CreateMap<Temporada, TemporadaDTO>();
+            CreateMap<TemporadaDTO, Temporada>();
         }
     }
 }

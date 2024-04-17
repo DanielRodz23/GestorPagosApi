@@ -32,6 +32,7 @@ builder.Services.AddTransient<Repository<Categoria>>();
 builder.Services.AddTransient<RepositoryUsuarios>();
 builder.Services.AddTransient<RepositoryJugadores>();
 builder.Services.AddTransient<RepositoryPagos>();
+builder.Services.AddTransient<RepositoryTemporadas>();
 
 var jwtconfig = new ConfigurationBuilder()
     .AddJsonFile("jwtsettings.json")

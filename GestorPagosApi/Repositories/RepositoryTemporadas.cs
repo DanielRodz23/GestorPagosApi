@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GestorPagosApi.Models.Entities;
 
 namespace GestorPagosApi.Repositories
@@ -10,6 +6,10 @@ namespace GestorPagosApi.Repositories
     {
         public RepositoryTemporadas(ClubDeportivoContext ctx) : base(ctx)
         {
+        }
+        public async Task<IEnumerable<Temporada>> GetTemporadasActualesAsync(){
+            var temps = ctx.Temporada.Where(x=>x.TempActual==true);
+            return temps;
         }
     }
 }

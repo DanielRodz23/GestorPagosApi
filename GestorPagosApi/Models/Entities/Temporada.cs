@@ -17,7 +17,7 @@ public partial class Temporada
 
     public decimal Costo { get; set; }
 
-    public ulong TempActual { get; set; }
+    public bool? TempActual { get; set; }
 
     public virtual Categoria? IdCategoriaNavigation { get; set; }
 

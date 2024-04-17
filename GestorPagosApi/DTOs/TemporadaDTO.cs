@@ -14,6 +14,7 @@ namespace GestorPagosApi.DTOs
         public int? IdCategoria { get; set; }
 
         public decimal Costo { get; set; }
+        public bool? TempActual { get; set; }
 
         public CategoriaDTO? IdCategoriaNavigation { get; set; }
 
