@@ -14,9 +14,10 @@ namespace GestorPagosApi.DTOs
         public int IdTemporada { get; set; }
 
         public decimal Deuda { get; set; }
+        public ulong Exists { get; set; }
 
-        public TemporadaDTO? IdTemporadaNavigation { get; set; } 
+        //public TemporadaDTO? IdTemporadaNavigation { get; set; } 
 
-        public ICollection<PagoDTO>? Pago { get; set; } 
+        //public ICollection<PagoDTO>? Pago { get; set; } 
     }
 }

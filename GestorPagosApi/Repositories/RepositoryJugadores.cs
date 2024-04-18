@@ -20,5 +20,9 @@ namespace GestorPagosApi.Repositories
         {
             return await ctx.Jugador.OrderBy(x => x.Nombre).ToListAsync();
         }
+        public IEnumerable<Jugador> GetCuatroJugadores()
+        {
+            return ctx.Jugador.Take(4);
+        }
     }
 }
