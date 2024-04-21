@@ -21,7 +21,7 @@ namespace GestorPagosApi.Repositories
         }
         public IEnumerable<Pago> GetCuatroPagos()
         {
-            return ctx.Pago.Take(4);
+            return ctx.Pago.Take(4).Include(x=>x.IdJugadorNavigation).Include(x=>x.IdResponsableNavigation);
         }
     }
 }

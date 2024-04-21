@@ -13,5 +13,7 @@ public partial class Categoria
 
     public int? EdadTermino { get; set; }
 
+    public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();
+
     public virtual ICollection<Temporada> Temporada { get; set; } = new List<Temporada>();
 }

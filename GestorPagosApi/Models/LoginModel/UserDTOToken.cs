@@ -8,6 +8,7 @@ namespace GestorPagosApi.Models.LoginModel
 {
     public class UserDTOToken
     {
+        public UsuarioDTO Usuario { get; set; }
         public string TokenString { get; set; }
     }
 }

@@ -79,7 +79,9 @@ namespace GestorPagosApi.Controllers
             };
             var token = TokenHandler.CreateToken(tokendescriptor);
             var response = TokenHandler.WriteToken(token);
-            UserDTOToken usrtoken = new(){ TokenString = response};
+
+            usr.Jugador = null;
+            UserDTOToken usrtoken = new(){ TokenString = response, Usuario = usr};
             return Ok(usrtoken);
         }
     }

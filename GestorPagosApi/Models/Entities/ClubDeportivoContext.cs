@@ -59,6 +59,8 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.ToTable("jugador", tb => tb.HasComment("Tabla que contiene la información de los jugadores registrador."));
 
+            entity.HasIndex(e => e.IdCategoria, "jugador_categoria_FK");
+
             entity.HasIndex(e => e.IdUsuario, "jugador_responsable_FK");
 
             entity.HasIndex(e => e.IdTemporada, "jugador_temporada_FK");
@@ -67,11 +69,16 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.Deuda).HasPrecision(10);
             entity.Property(e => e.Dob).HasColumnName("DOB");
             entity.Property(e => e.Exists)
-                .HasDefaultValueSql("b'1'")
-                .HasColumnType("bit(1)");
+                .IsRequired()
+                .HasDefaultValueSql("'1'");
+            entity.Property(e => e.IdCategoria).HasColumnType("int(11)");
             entity.Property(e => e.IdTemporada).HasColumnType("int(11)");
             entity.Property(e => e.IdUsuario).HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
+
+            entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Jugador)
+                .HasForeignKey(d => d.IdCategoria)
+                .HasConstraintName("jugador_categoria_FK");
 
             entity.HasOne(d => d.IdTemporadaNavigation).WithMany(p => p.Jugador)
                 .HasForeignKey(d => d.IdTemporada)
@@ -193,7 +200,7 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.Property(e => e.IdUsuario).HasColumnType("int(11)");
             entity.Property(e => e.Contrasena)
-                .HasMaxLength(64)
+                .HasMaxLength(255)
                 .IsFixedLength();
             entity.Property(e => e.Correo).HasMaxLength(80);
             entity.Property(e => e.Exists)

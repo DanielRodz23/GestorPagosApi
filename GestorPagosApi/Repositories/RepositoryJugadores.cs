@@ -22,7 +22,7 @@ namespace GestorPagosApi.Repositories
         }
         public IEnumerable<Jugador> GetCuatroJugadores()
         {
-            return ctx.Jugador.Take(4);
+            return ctx.Jugador.Take(4).Include(x=>x.IdCategoriaNavigation);
         }
     }
 }

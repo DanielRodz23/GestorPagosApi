@@ -2,6 +2,7 @@
 using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Models.LoginModel;
+using GestorPagosApi.Models.ViewModels.AdminViewModels;
 
 namespace GestorPagosApi.Mappers
 {
@@ -30,6 +31,16 @@ namespace GestorPagosApi.Mappers
 
             CreateMap<Temporada, TemporadaDTO>();
             CreateMap<TemporadaDTO, Temporada>();
+
+            CreateMap<Pago, DashPago>()
+                .ForMember(dest => dest.JugadorNavigation, opt => opt.MapFrom(src => src.IdJugadorNavigation.Nombre))
+                .ForMember(dest => dest.ResponsableNavigation, opt => opt.MapFrom(src => src.IdResponsableNavigation.Nombre));
+
+            CreateMap<Jugador, DashJugador>()
+                .ForMember(dest => dest.CategoriaNavigation,
+                opt => opt
+                .MapFrom(src => src.IdCategoriaNavigation.NombreCategoria));
+
         }
     }
 }

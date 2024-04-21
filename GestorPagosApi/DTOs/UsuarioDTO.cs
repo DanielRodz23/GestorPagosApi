@@ -9,8 +9,6 @@ namespace GestorPagosApi.DTOs
 
         public string Usuario { get; set; } = null!;
 
-        public string Contrasena { get; set; } = null!;
-
         public int IdRol { get; set; }
 
         public RolDTO? IdRolNavigation { get; set; } 

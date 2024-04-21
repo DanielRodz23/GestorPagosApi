@@ -20,7 +20,11 @@ public partial class Jugador
 
     public decimal Deuda { get; set; }
 
-    public ulong Exists { get; set; }
+    public bool? Exists { get; set; }
+
+    public int? IdCategoria { get; set; }
+
+    public virtual Categoria? IdCategoriaNavigation { get; set; }
 
     public virtual Temporada? IdTemporadaNavigation { get; set; }
 

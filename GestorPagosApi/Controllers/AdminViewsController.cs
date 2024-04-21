@@ -2,7 +2,7 @@
 using GestorPagosApi.DTOs;
 using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
-using GestorPagosApi.Models.ViewModels;
+using GestorPagosApi.Models.ViewModels.AdminViewModels;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,14 +18,14 @@ namespace GestorPagosApi.Controllers
         private readonly RepositoryTemporadas repositoryTemporadas;
         private readonly Repository<Categoria> repositoryCategorias;
         private readonly RepositoryPagos repositoryPagos;
-        private readonly Mapper mapper;
+        private readonly IMapper mapper;
 
         public AdminViewsController(
             RepositoryJugadores repositoryJugadores, 
             RepositoryTemporadas repositoryTemporadas, 
             Repository<Categoria> repositoryCategorias, 
             RepositoryPagos repositoryPagos,
-            Mapper mapper)
+            IMapper mapper)
         {
             this.repositoryJugadores = repositoryJugadores;
             this.repositoryTemporadas = repositoryTemporadas;
@@ -33,7 +33,7 @@ namespace GestorPagosApi.Controllers
             this.repositoryPagos = repositoryPagos;
             this.mapper = mapper;
         }
-        //[Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpGet]
         public async Task<IActionResult> GetDashboard()
         {
@@ -42,10 +42,11 @@ namespace GestorPagosApi.Controllers
             model.TotalTemporadas =  repositoryTemporadas.GetAll().Count();
             model.TotalCategorias = repositoryCategorias.GetAll().Count();
             model.TotalPagos = repositoryPagos.GetAll().Count();
-            model.ListaPagos = mapper.Map<IEnumerable<PagoDTO>>(repositoryPagos.GetCuatroPagos()).ToList();
-            model.ListaJugadores = mapper.Map<IEnumerable<JugadorDTO>>(repositoryJugadores.GetCuatroJugadores()).ToList();
+            model.ListaPagos = mapper.Map<IEnumerable<DashPago>>(repositoryPagos.GetCuatroPagos()).ToList();
+            model.ListaJugadores = mapper.Map<IEnumerable<DashJugador>>(repositoryJugadores.GetCuatroJugadores()).ToList();
 
             return Ok(model);
         }
+        
     }
 }
