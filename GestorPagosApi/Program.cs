@@ -38,18 +38,22 @@ var jwtconfig = new ConfigurationBuilder()
     .AddJsonFile("jwtsettings.json")
     .Build();
 
+var tknValidationParameters = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = jwtconfig["Jwt:Issuer"],
+    ValidAudience = jwtconfig["Jwt:Audience"],
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtconfig["Jwt:Key"]))
+};
+
+builder.Services.AddSingleton(tknValidationParameters);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x=>{
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtconfig["Jwt:Issuer"],
-        ValidAudience = jwtconfig["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtconfig["Jwt:Key"]))
-    };
+    x.TokenValidationParameters = tknValidationParameters;
 });
 
 builder.Services.AddAuthorization(x=>{

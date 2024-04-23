@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorPagosApi.Controllers
 {
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminViewsController : ControllerBase
@@ -18,28 +19,30 @@ namespace GestorPagosApi.Controllers
         private readonly RepositoryTemporadas repositoryTemporadas;
         private readonly Repository<Categoria> repositoryCategorias;
         private readonly RepositoryPagos repositoryPagos;
+        private readonly RepositoryUsuarios repositoryUsuarios;
         private readonly IMapper mapper;
 
         public AdminViewsController(
-            RepositoryJugadores repositoryJugadores, 
-            RepositoryTemporadas repositoryTemporadas, 
-            Repository<Categoria> repositoryCategorias, 
+            RepositoryJugadores repositoryJugadores,
+            RepositoryTemporadas repositoryTemporadas,
+            Repository<Categoria> repositoryCategorias,
             RepositoryPagos repositoryPagos,
+            RepositoryUsuarios repositoryUsuarios,
             IMapper mapper)
         {
             this.repositoryJugadores = repositoryJugadores;
             this.repositoryTemporadas = repositoryTemporadas;
             this.repositoryCategorias = repositoryCategorias;
             this.repositoryPagos = repositoryPagos;
+            this.repositoryUsuarios = repositoryUsuarios;
             this.mapper = mapper;
         }
-        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpGet]
         public async Task<IActionResult> GetDashboard()
         {
             DashboardModel model = new DashboardModel();
-            model.Totaljugadores =  repositoryJugadores.GetAll().Count();
-            model.TotalTemporadas =  repositoryTemporadas.GetAll().Count();
+            model.Totaljugadores = repositoryJugadores.GetAll().Count();
+            model.TotalTemporadas = repositoryTemporadas.GetAll().Count();
             model.TotalCategorias = repositoryCategorias.GetAll().Count();
             model.TotalPagos = repositoryPagos.GetAll().Count();
             model.ListaPagos = mapper.Map<IEnumerable<DashPago>>(repositoryPagos.GetCuatroPagos()).ToList();
@@ -47,6 +50,33 @@ namespace GestorPagosApi.Controllers
 
             return Ok(model);
         }
-        
+        [HttpGet("VerCategorias")]
+        public async Task<IActionResult> GetViewCategorias()
+        {
+            var cats = repositoryCategorias.GetAll();
+            var catsmapd = mapper.Map<IEnumerable<CategoriaDTO>>(cats);
+            return Ok(catsmapd);
+        }
+        [HttpGet("VerJugadores")]
+        public async Task<IActionResult> GetViewJugadores()
+        {
+            var jugs = await repositoryJugadores.GetCuatroJugadoresIncludeCategoriasAsync();
+            var jugsmapd = mapper.Map<IEnumerable<ViewJugadoresAdmin>>(jugs);
+            return Ok(jugsmapd);
+        }
+        [HttpGet("VerResponsables")]
+        public async Task<IActionResult> GetViewResponsables()
+        {
+            var resp = await repositoryUsuarios.GetCuatroUsuariosTipoResponsable();
+            var respsmapd = mapper.Map<IEnumerable<ViewResponsablesAdmin>>(resp);
+            return Ok(respsmapd);
+        }
+        [HttpGet("VerTemporadas")]
+        public async Task<IActionResult> GetViewTemporadas()
+        {
+            var temps = await repositoryTemporadas.GetCuatroTemporadasAsync();
+            var tempsmapd = mapper.Map<IEnumerable< ViewTemporadasAdmin>>(temps);
+            return Ok(tempsmapd);
+        }
     }
 }

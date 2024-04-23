@@ -16,9 +16,13 @@ namespace GestorPagosApi.Repositories
         {
             return await ctx.Jugador.Include(x => x.Pago.OrderByDescending(y=>y.FechaPago)).FirstOrDefaultAsync(x => x.IdJugador == id);
         }
+        public async Task<IEnumerable<Jugador>> GetCuatroJugadoresIncludeCategoriasAsync()
+        {
+            return ctx.Jugador.Include(x => x.IdCategoriaNavigation).Take(4);
+        }
         public async Task<IEnumerable<Jugador>> GetAllAsync()
         {
-            return await ctx.Jugador.OrderBy(x => x.Nombre).ToListAsync();
+            return  ctx.Jugador.OrderBy(x => x.Nombre);
         }
         public IEnumerable<Jugador> GetCuatroJugadores()
         {

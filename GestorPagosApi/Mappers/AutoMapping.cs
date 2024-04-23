@@ -41,6 +41,12 @@ namespace GestorPagosApi.Mappers
                 opt => opt
                 .MapFrom(src => src.IdCategoriaNavigation.NombreCategoria));
 
+            CreateMap<Jugador, ViewJugadoresAdmin>()
+                .ForMember(dest => dest.NombreCategoria, opt => opt.MapFrom(src => src.IdCategoriaNavigation.NombreCategoria));
+
+            CreateMap<Usuarios, ViewResponsablesAdmin>();
+
+            CreateMap<Temporada, ViewTemporadasAdmin>();
         }
     }
 }
