@@ -15,6 +15,7 @@ namespace GestorPagosApi.DTOs
 
         public decimal Deuda { get; set; }
         public bool Exists { get; set; }
+        public int? IdCategoria { get; set; }
 
         //public TemporadaDTO? IdTemporadaNavigation { get; set; } 
 

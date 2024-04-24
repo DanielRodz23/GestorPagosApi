@@ -204,12 +204,15 @@ public partial class ClubDeportivoContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.Correo).HasMaxLength(80);
             entity.Property(e => e.Exists)
-                .HasDefaultValueSql("b'1'")
-                .HasColumnType("bit(1)");
+                .IsRequired()
+                .HasDefaultValueSql("'1'");
             entity.Property(e => e.IdRol)
                 .HasDefaultValueSql("'2'")
                 .HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.Rfc)
+                .HasMaxLength(25)
+                .HasColumnName("RFC");
             entity.Property(e => e.Telefono).HasMaxLength(20);
             entity.Property(e => e.Usuario).HasMaxLength(100);
 

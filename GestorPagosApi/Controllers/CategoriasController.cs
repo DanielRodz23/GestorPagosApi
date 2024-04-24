@@ -32,16 +32,16 @@ namespace GestorPagosApi.Controllers
         }
         [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost]
-        public async Task<IActionResult> PostCtaegoria(CategoriaDTO categoria)
+        public async Task<IActionResult> PostCataegoria(CategoriaDTO categoria)
         {
             if (categoria == null)
             {
-                return NotFound();
+                return BadRequest();
             }
             var datos = mapper.Map<Categoria>(categoria);
             repository.Insert(datos);
-
-            return Ok(datos);
+            var catdto = mapper.Map<CategoriaDTO>(datos);
+            return Created("",catdto);
         }
     }
 }

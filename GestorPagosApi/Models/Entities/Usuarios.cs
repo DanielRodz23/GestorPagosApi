@@ -18,11 +18,13 @@ public partial class Usuarios
 
     public int IdRol { get; set; }
 
-    public ulong Exists { get; set; }
+    public bool? Exists { get; set; }
 
     public string? Telefono { get; set; }
 
     public string? Correo { get; set; }
+
+    public string? Rfc { get; set; }
 
     public virtual Roles IdRolNavigation { get; set; } = null!;
 

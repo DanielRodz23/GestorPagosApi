@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class JugadoresController : ControllerBase
@@ -38,6 +38,7 @@ namespace GestorPagosApi.Controllers
             if (data == null) return BadRequest(new {mensaje = "No existe un responsable con ese ID"});
             return Ok(data);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost]
         public async Task<IActionResult> PostJugadores(JugadorDTO jugador){
             if (jugador==null)
@@ -46,6 +47,7 @@ namespace GestorPagosApi.Controllers
             }
 
             var jug = mapper.Map<Jugador>(jugador);
+            jug.Exists= true;
             repository.Insert(jug);
             var returndata = mapper.Map<JugadorDTO>(jug);
             return Ok(returndata);

@@ -3,16 +3,25 @@ namespace GestorPagosApi.DTOs
 {
     public class UsuarioDTO
     {
-        public int IdUsuario { get; set; }
+        public int idUsuario { get; set; }
 
-        public string Nombre { get; set; } = null!;
+        public string nombre { get; set; } = null!;
 
-        public string Usuario { get; set; } = null!;
+        public string usuario { get; set; } = null!;
 
-        public int IdRol { get; set; }
+        public string contrasena { get; set; } = null!;
 
-        public RolDTO? IdRolNavigation { get; set; } 
-        public ICollection<JugadorDTO>? Jugador { get; set; }
+        public int idRol { get; set; }
+
+        public bool? exists { get; set; }
+
+        public string? telefono { get; set; }
+
+        public string? correo { get; set; }
+
+        public string? rfc { get; set; }
+
+        public RolDTO? IdRolNavigation { get; set; }
 
     }
 }

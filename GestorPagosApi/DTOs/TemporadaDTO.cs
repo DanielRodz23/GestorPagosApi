@@ -18,6 +18,6 @@ namespace GestorPagosApi.DTOs
 
         public CategoriaDTO? IdCategoriaNavigation { get; set; }
 
-        public ICollection<JugadorDTO> Jugador { get; set; }
+        public ICollection<JugadorDTO>? Jugador { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace GestorPagosApi.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                new Claim("id", usr.IdUsuario.ToString())
+                new Claim("id", usr.idUsuario.ToString())
             };
             if (data.IdRolNavigation.NombreRol == IdentityData.AdminUserClaimName)
             {
@@ -95,7 +95,6 @@ namespace GestorPagosApi.Controllers
             var token = TokenHandler.CreateToken(tokendescriptor);
             var response = TokenHandler.WriteToken(token);
 
-            usr.Jugador = null;
             UserDTOToken usrtoken = new() { TokenString = response, Usuario = usr };
             return Ok(usrtoken);
         }

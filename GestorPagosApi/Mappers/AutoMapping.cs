@@ -37,8 +37,7 @@ namespace GestorPagosApi.Mappers
                 .ForMember(dest => dest.ResponsableNavigation, opt => opt.MapFrom(src => src.IdResponsableNavigation.Nombre));
 
             CreateMap<Jugador, DashJugador>()
-                .ForMember(dest => dest.CategoriaNavigation,
-                opt => opt
+                .ForMember(dest => dest.CategoriaNavigation, opt => opt
                 .MapFrom(src => src.IdCategoriaNavigation.NombreCategoria));
 
             CreateMap<Jugador, ViewJugadoresAdmin>()

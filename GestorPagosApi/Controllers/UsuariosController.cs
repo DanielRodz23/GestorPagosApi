@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Helpers;
 using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
@@ -15,6 +16,7 @@ using System.Text.Unicode;
 
 namespace GestorPagosApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
@@ -82,13 +84,17 @@ namespace GestorPagosApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostUsuarios(UsuarioDTO usuarios)
         {
-            if (usuarios == null)
+            if (usuarios == null || usuarios.idRol != 2)
             {
                 return NotFound();
             }
             var data = mapper.Map<Usuarios>(usuarios);
+            //Contraseña en SHA512
+            data.Contrasena = Encriptacion.StringToSHA512(data.Contrasena);
             repository.Insert(data);
-            return Ok(data);
+            var respDto = mapper.Map<UsuarioDTO>(data);
+            respDto.contrasena="";
+            return Created("", respDto);
         }
     }
 }
