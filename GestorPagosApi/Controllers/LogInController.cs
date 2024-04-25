@@ -16,12 +16,19 @@ namespace GestorPagosApi.Controllers
     [Route("api/[controller]")]
     public class LogInController : ControllerBase
     {
-        public LogInController(RepositoryUsuarios repositoryUsuarios, IMapper mapper, TokenValidationParameters tknValidationParameters)
+        public LogInController(
+            RepositoryUsuarios repositoryUsuarios, 
+            IMapper mapper, 
+            TokenValidationParameters tknValidationParameters, 
+            IConfigurationRoot jwtconfig)
         {
             this.repositoryUsuarios = repositoryUsuarios;
             this.mapper = mapper;
             this.tknValidationParameters = tknValidationParameters;
+            configuration = jwtconfig;
+            
         }
+        private IConfigurationRoot configuration;
         private readonly RepositoryUsuarios repositoryUsuarios;
         private readonly IMapper mapper;
         private readonly TokenValidationParameters tknValidationParameters;
@@ -45,10 +52,9 @@ namespace GestorPagosApi.Controllers
                 return StatusCode(500, new { mensaje = "Problemas con mapper" });
             }
 
-            var configuration = new ConfigurationBuilder()
-    .AddJsonFile("jwtsettings.json")
-    .Build();
-
+    //         var configuration = new ConfigurationBuilder()
+    // .AddJsonFile("jwtsettings.json")
+    // .Build();
             var jwt = configuration.GetSection("Jwt").Get<JwtModel>();
 
             if (jwt == null)

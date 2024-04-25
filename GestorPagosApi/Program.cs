@@ -38,6 +38,8 @@ var jwtconfig = new ConfigurationBuilder()
     .AddJsonFile("jwtsettings.json")
     .Build();
 
+builder.Services.AddSingleton(jwtconfig);
+
 var tknValidationParameters = new TokenValidationParameters
 {
     ValidateIssuer = true,
