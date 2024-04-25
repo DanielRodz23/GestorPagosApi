@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase
@@ -31,7 +30,7 @@ namespace GestorPagosApi.Controllers
             return Ok(data);
 
         }
-        
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost]
         public async Task<IActionResult> PostCtaegoria(CategoriaDTO categoria)
         {
