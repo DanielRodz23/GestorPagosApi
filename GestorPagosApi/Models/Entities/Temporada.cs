@@ -13,13 +13,15 @@ public partial class Temporada
 
     public DateTime FechaFinal { get; set; }
 
-    public int? IdCategoria { get; set; }
+    public int IdCategoria { get; set; }
 
     public decimal Costo { get; set; }
 
     public bool? TempActual { get; set; }
 
-    public virtual Categoria? IdCategoriaNavigation { get; set; }
+    public bool? Exists { get; set; }
+
+    public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
 
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();
 

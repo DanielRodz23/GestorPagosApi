@@ -96,5 +96,30 @@ namespace GestorPagosApi.Controllers
             respDto.contrasena="";
             return Created("", respDto);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpPut]
+        public async Task<IActionResult> PutUsuario(UsuarioDTO usuarioDTO)
+        {
+            var user = repository.Get(usuarioDTO.idUsuario);
+            if (user == null || user.IdRol==1)
+                return NotFound();
+            var usermapd = mapper.Map<Usuarios>(usuarioDTO);
+            usermapd.Contrasena = Encriptacion.StringToSHA512(user.Contrasena);
+            repository.Update(usermapd);
+            return Ok();
+            
+        }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteResponsable(int id){
+            var resp = repository.Get(id);
+            if (resp==null || resp.IdRol==2)
+            {
+                return NotFound();
+            }
+            resp.Exists=false;
+            repository.Update(resp);
+            return Ok();
+        }
     }
 }

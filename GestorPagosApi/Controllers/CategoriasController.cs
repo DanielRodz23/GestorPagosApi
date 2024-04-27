@@ -41,7 +41,31 @@ namespace GestorPagosApi.Controllers
             var datos = mapper.Map<Categoria>(categoria);
             repository.Insert(datos);
             var catdto = mapper.Map<CategoriaDTO>(datos);
-            return Created("",catdto);
+            return Created("", catdto);
+        }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpPut]
+        public async Task<IActionResult> PutCategoria(CategoriaDTO categoria)
+        {
+            var cat = repository.Get(categoria.idCategoria);
+            if (cat == null)
+            {
+                return NotFound();
+            }
+            var catupdt = mapper.Map<Categoria> (cat);
+            //Validar en esta linea
+            repository.Update(catupdt);
+            return Ok();
+        }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategoria(int id)
+        {
+            var cat = repository.Get(id);
+            if (cat == null)
+                return NotFound();
+            repository.Delete(cat);
+            return Ok();
         }
     }
 }

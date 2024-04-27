@@ -3,15 +3,15 @@ namespace GestorPagosApi.DTOs
 {
     public class PagoDTO
     {
-        public int IdPago { get; set; }
+        public int idPago { get; set; }
 
-        public DateTime FechaPago { get; set; }
+        public DateTime fechaPago { get; set; }
 
-        public int IdJugador { get; set; }
+        public int idJugador { get; set; }
 
-        public decimal CantidadPago { get; set; }
+        public decimal cantidadPago { get; set; }
 
-        public int? IdResponsable { get; set; }
+        public int? idResponsable { get; set; }
 
         //public virtual JugadorDTO IdJugadorNavigation { get; set; } = null!;
 

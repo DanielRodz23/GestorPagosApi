@@ -3,21 +3,15 @@ namespace GestorPagosApi.DTOs
 {
     public class TemporadaDTO
     {
-        public int IdTemporada { get; set; }
-
-        public string Nombre { get; set; } = null!;
-
-        public DateTime FechaInicio { get; set; }
-
-        public DateTime FechaFinal { get; set; }
-
-        public int? IdCategoria { get; set; }
-
-        public decimal Costo { get; set; }
-        public bool? TempActual { get; set; }
-
-        public CategoriaDTO? IdCategoriaNavigation { get; set; }
-
-        public ICollection<JugadorDTO>? Jugador { get; set; }
+        public int idTemporada { get; set; }
+        public string nombre { get; set; } = null!;
+        public DateTime fechaInicio { get; set; }
+        public DateTime fechaFinal { get; set; }
+        public int? idCategoria { get; set; }
+        public decimal costo { get; set; }
+        public bool? tempActual { get; set; }
+        public bool? exists { get; set; }
+        public CategoriaDTO? idCategoriaNavigation { get; set; }
+        public ICollection<JugadorDTO>? jugador { get; set; }
     }
 }

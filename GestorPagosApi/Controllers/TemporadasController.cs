@@ -45,5 +45,29 @@ namespace GestorPagosApi.Controllers
             var tmpdto = mapper.Map<TemporadaDTO>(temp);
             return Created("", tmpdto);        
         }
+
+        [Authorize(IdentityData.AdminUserPolicyName)]
+        [HttpPut]
+        public async Task<IActionResult> PutTemporada(TemporadaDTO dTO){
+            if (dTO == null) return BadRequest();
+            //Validat DTO
+            var  temp = repository.Get(dTO.idTemporada);
+            if (temp == null)
+            {
+                return NotFound();
+            }
+            var tempmapd = mapper.Map<Temporada>(dTO);
+            repository.Update(tempmapd);
+            return Ok();
+        }
+
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTemporada(int id){
+            var temp = repository.Get(id);
+            if (temp == null || temp.Exists==false)
+                return NotFound();
+            return Ok();
+        }
     }
 }

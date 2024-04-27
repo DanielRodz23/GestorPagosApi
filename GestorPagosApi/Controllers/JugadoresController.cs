@@ -52,6 +52,7 @@ namespace GestorPagosApi.Controllers
             var returndata = mapper.Map<JugadorDTO>(jug);
             return Ok(returndata);
         }
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPut]
         public async Task<IActionResult> PutJugadores(JugadorDTO jugador)
         {
@@ -64,6 +65,17 @@ namespace GestorPagosApi.Controllers
             var returdata = mapper.Map<JugadorDTO>(dato);
             return Ok(returdata);
         }
-        
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteJugador(int id){
+            var jugador = repository.Get(id);
+            if (jugador== null || !(jugador.Exists??true))
+            {
+                return NotFound();
+            }
+            jugador.Exists= false;
+            repository.Update(jugador);
+            return Ok();
+        }
     }
 }

@@ -62,12 +62,12 @@ namespace GestorPagosApi.Controllers
         {
             if (pago == null) return NotFound();
 
-            var jugador = repositoryJugadores.Get(pago.IdJugador);
+            var jugador = repositoryJugadores.Get(pago.idJugador);
             if (jugador == null)
             {
                 return NotFound(new { Mensaje = "Jugador inexistente" });
             }
-            if (jugador.Deuda < pago.CantidadPago)
+            if (jugador.Deuda < pago.cantidadPago)
             {
                 return BadRequest(new
                 {
@@ -77,7 +77,7 @@ namespace GestorPagosApi.Controllers
             }
 
             //Si todo es correcto
-            jugador.Deuda = jugador.Deuda - pago.CantidadPago;
+            jugador.Deuda = jugador.Deuda - pago.cantidadPago;
             var newpago = mapper.Map<Pago>(pago);
 
             repositoryJugadores.Update(jugador);
@@ -87,10 +87,20 @@ namespace GestorPagosApi.Controllers
             //return Ok(pagorealizado);
 
             //Regresa el jugador
-            var newjug = await repositoryJugadores.GetPagosInclude(pago.IdJugador);
+            var newjug = await repositoryJugadores.GetPagosInclude(pago.idJugador);
             var jugadorDTO = mapper.Map<JugadorDTO>(newjug);
             return Ok(jugadorDTO);
         }
-
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePago(int id){
+            var pago = repository.Get(id);
+            if (pago == null)
+            {
+                return NotFound();
+            }
+            repository.Delete(pago);
+            return Ok();
+        }
     }
 }

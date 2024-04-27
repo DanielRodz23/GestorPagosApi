@@ -31,10 +31,6 @@ public partial class ClubDeportivoContext : DbContext
 
     public virtual DbSet<Usuarios> Usuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=labsystec.net;user=labsyste_clubDep;database=clubDeportivo;password=N37vvj#41", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.7-mariadb"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -175,9 +171,14 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.Property(e => e.IdTemporada).HasColumnType("int(11)");
             entity.Property(e => e.Costo).HasPrecision(10);
+            entity.Property(e => e.Exists)
+                .IsRequired()
+                .HasDefaultValueSql("'1'");
             entity.Property(e => e.FechaFinal).HasColumnType("datetime");
             entity.Property(e => e.FechaInicio).HasColumnType("datetime");
-            entity.Property(e => e.IdCategoria).HasColumnType("int(11)");
+            entity.Property(e => e.IdCategoria)
+                .HasDefaultValueSql("'1'")
+                .HasColumnType("int(11)");
             entity.Property(e => e.Nombre).HasMaxLength(50);
             entity.Property(e => e.TempActual)
                 .IsRequired()
@@ -185,6 +186,7 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Temporada)
                 .HasForeignKey(d => d.IdCategoria)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("temporada_categoria_FK");
         });
 
