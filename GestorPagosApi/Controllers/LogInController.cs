@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using AutoMapper;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Helpers;
 using GestorPagosApi.Identity;
 using GestorPagosApi.Models.LoginModel;
 using GestorPagosApi.Repositories;
@@ -37,6 +38,7 @@ namespace GestorPagosApi.Controllers
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginModel model)
         {
+            model.Contrasena = Encriptacion.StringToSHA512(model.Contrasena);
             var data = await repositoryUsuarios.LogIn(model);
             if (data == null)
             {
@@ -93,7 +95,7 @@ namespace GestorPagosApi.Controllers
             var tokendescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(120),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 Issuer = jwt.Issuer,
                 Audience = jwt.Audience,
                 SigningCredentials = signin

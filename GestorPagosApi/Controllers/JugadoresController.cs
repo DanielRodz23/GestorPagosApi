@@ -45,12 +45,11 @@ namespace GestorPagosApi.Controllers
             {
                 return BadRequest(new {mensaje = "Contenido incorrecto"});
             }
-
+            //Validar
             var jug = mapper.Map<Jugador>(jugador);
             jug.Exists= true;
             repository.Insert(jug);
-            var returndata = mapper.Map<JugadorDTO>(jug);
-            return Ok(returndata);
+            return Ok();
         }
         [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPut]
