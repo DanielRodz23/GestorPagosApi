@@ -40,13 +40,15 @@ namespace GestorPagosApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboard()
         {
-            DashboardModel model = new DashboardModel();
-            model.Totaljugadores = repositoryJugadores.GetAll().Count();
-            model.TotalTemporadas = repositoryTemporadas.GetAll().Count();
-            model.TotalCategorias = repositoryCategorias.GetAll().Count();
-            model.TotalPagos = repositoryPagos.GetAll().Count();
-            model.ListaPagos = mapper.Map<IEnumerable<DashPago>>(repositoryPagos.GetCuatroPagos()).ToList();
-            model.ListaJugadores = mapper.Map<IEnumerable<DashJugador>>(repositoryJugadores.GetCuatroJugadores()).ToList();
+            DashboardModel model = new()
+            {
+                Totaljugadores = repositoryJugadores.GetAll().Count(),
+                TotalTemporadas = repositoryTemporadas.GetAll().Count(),
+                TotalCategorias = repositoryCategorias.GetAll().Count(),
+                TotalPagos = repositoryPagos.GetAll().Count(),
+                ListaPagos = mapper.Map<IEnumerable<DashPago>>(repositoryPagos.GetCuatroPagos()).ToList(),
+                ListaJugadores = mapper.Map<IEnumerable<DashJugador>>(repositoryJugadores.GetCuatroJugadores()).ToList()
+            };
 
             return Ok(model);
         }
