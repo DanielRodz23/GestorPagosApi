@@ -60,21 +60,21 @@ namespace GestorPagosApi.Controllers
         [HttpGet("VerJugadores")]
         public async Task<IActionResult> GetViewJugadores()
         {
-            var jugs = await repositoryJugadores.GetCuatroJugadoresIncludeCategoriasAsync();
+            var jugs = await repositoryJugadores.GetAllIncludeCategoriasAsync();
             var jugsmapd = mapper.Map<IEnumerable<ViewJugadoresAdmin>>(jugs);
             return Ok(jugsmapd);
         }
         [HttpGet("VerResponsables")]
         public async Task<IActionResult> GetViewResponsables()
         {
-            var resp = await repositoryUsuarios.GetCuatroUsuariosTipoResponsable();
+            var resp = await repositoryUsuarios.GetAllUsuariosTipoResponsable();
             var respsmapd = mapper.Map<IEnumerable<ViewResponsablesAdmin>>(resp);
             return Ok(respsmapd);
         }
         [HttpGet("VerTemporadas")]
         public async Task<IActionResult> GetViewTemporadas()
         {
-            var temps = await repositoryTemporadas.GetCuatroTemporadasAsync();
+            var temps = await repositoryTemporadas.GetTemporadasActualesAsync();
             var tempsmapd = mapper.Map<IEnumerable< ViewTemporadasAdmin>>(temps);
             return Ok(tempsmapd);
         }

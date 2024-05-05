@@ -22,9 +22,9 @@ namespace GestorPagosApi.Repositories
                 .Include(x=>x.IdRolNavigation)
                 .FirstOrDefaultAsync(x=>x.IdUsuario==id);
         }
-        public async Task<IEnumerable< Usuarios>> GetCuatroUsuariosTipoResponsable()
+        public async Task<IEnumerable< Usuarios>> GetAllUsuariosTipoResponsable()
         {
-            return ctx.Usuarios.Where(x => x.IdRol == 2).Take(4);
+            return ctx.Usuarios.Where(x => x.IdRol == 2);
         }
 
         public async Task<Usuarios> LogIn(LoginModel model)

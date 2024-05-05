@@ -45,6 +45,7 @@ namespace GestorPagosApi.Controllers
             {
                 return BadRequest(new {mensaje = "Contenido incorrecto"});
             }
+            
             //Validar
             var jug = mapper.Map<Jugador>(jugador);
             jug.Exists= true;
