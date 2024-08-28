@@ -120,5 +120,10 @@ namespace GestorPagosApi.Controllers
                 return NotFound(new {mensaje = ex.ToString()});
             }
         }
+        [HttpGet("/")]
+        public async Task<IActionResult> GetIndex()
+        {
+            return Ok("Ok");
+        }
     }
 }

@@ -367,3 +367,7 @@ Conexion.json
 
 #JSON de configuracion de JWT para la autenticacion
 jwtsettings.json
+
+#Automaticly generated sln
+GestorPagosApi/GestorPagosApi.generated.sln
+GestorPagosApi/GestorPagosApi.sln

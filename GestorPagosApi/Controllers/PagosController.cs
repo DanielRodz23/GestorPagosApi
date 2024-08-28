@@ -4,14 +4,13 @@ using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 
 namespace GestorPagosApi.Controllers
 {
-    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+    // [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+    // [Authorize(Policy = IdentityData.TesoreroUserPolicyName)]
+    // [Authorize(Policy = IdentityData.ResponsableUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class PagosController : ControllerBase
@@ -31,7 +30,7 @@ namespace GestorPagosApi.Controllers
         {
             //Obtiene el usuario con include de los jugadores y sus pagos
             var datos = await repository.GetPagosByResponsable(id);
-            if (datos==null) return NotFound();
+            if (datos == null) return NotFound();
 
             //Convierte la consulta en un dto de usuario
             var user = mapper.Map<UsuarioDTO>(datos);
@@ -41,7 +40,7 @@ namespace GestorPagosApi.Controllers
         public async Task<IActionResult> GetPagosByJugador(int id)
         {
             var datos = await repository.GetPagosByJugador(id);
-            if (datos==null) return NotFound();
+            if (datos == null) return NotFound();
 
             var pagos = mapper.Map<IEnumerable<PagoDTO>>(datos);
             return Ok(pagos);
@@ -52,7 +51,7 @@ namespace GestorPagosApi.Controllers
             var pago = repository.Get(id);
             if (pago == null)
             {
-                return NotFound(new {mensaje = $"Pago con Id: {id} no existe en la base de datos"});
+                return NotFound(new { mensaje = $"Pago con Id: {id} no existe en la base de datos" });
             }
             var dato = mapper.Map<PagoDTO>(pago);
             return Ok(dato);
@@ -60,6 +59,9 @@ namespace GestorPagosApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPagar(PagoDTO pago)
         {
+            var context = HttpContext;
+            string id = User.FindFirst("id").Value;
+
             if (pago == null) return NotFound();
 
             var jugador = repositoryJugadores.Get(pago.idJugador);
@@ -77,7 +79,8 @@ namespace GestorPagosApi.Controllers
             }
 
             //Si todo es correcto
-            jugador.Deuda = jugador.Deuda - pago.cantidadPago;
+            jugador.Deuda -= pago.cantidadPago;
+            pago.idResponsable = jugador.IdUsuario;
             var newpago = mapper.Map<Pago>(pago);
 
             repositoryJugadores.Update(jugador);
@@ -93,7 +96,8 @@ namespace GestorPagosApi.Controllers
         }
         [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePago(int id){
+        public async Task<IActionResult> DeletePago(int id)
+        {
             var pago = repository.Get(id);
             if (pago == null)
             {
