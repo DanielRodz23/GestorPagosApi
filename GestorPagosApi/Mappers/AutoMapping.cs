@@ -3,6 +3,7 @@ using GestorPagosApi.DTOs;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Models.LoginModel;
 using GestorPagosApi.Models.ViewModels.AdminViewModels;
+using GestorPagosApi.Models.ViewModels.ResponsableViewModels;
 
 namespace GestorPagosApi.Mappers
 {
@@ -46,6 +47,8 @@ namespace GestorPagosApi.Mappers
             CreateMap<Usuarios, ViewResponsablesAdmin>();
 
             CreateMap<Temporada, ViewTemporadasAdmin>();
+
+            CreateMap<Pago, HistorialPagos>();
         }
     }
 }

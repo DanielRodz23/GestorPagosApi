@@ -15,7 +15,11 @@ public partial class Pago
 
     public int? IdResponsable { get; set; }
 
+    public int? IdTemporada { get; set; }
+
     public virtual Jugador IdJugadorNavigation { get; set; } = null!;
 
     public virtual Usuarios? IdResponsableNavigation { get; set; }
+
+    public virtual Temporada? IdTemporadaNavigation { get; set; }
 }

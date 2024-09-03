@@ -22,7 +22,7 @@ namespace GestorPagosApi.Repositories
                 .Include(x=>x.IdRolNavigation)
                 .FirstOrDefaultAsync(x=>x.IdUsuario==id);
         }
-        public async Task<IEnumerable< Usuarios>> GetAllUsuariosTipoResponsable()
+        public async Task<IEnumerable<Usuarios>> GetAllUsuariosTipoResponsable()
         {
             return ctx.Usuarios.Where(x => x.IdRol == 2);
         }
@@ -30,6 +30,10 @@ namespace GestorPagosApi.Repositories
         public async Task<Usuarios> LogIn(LoginModel model)
         {
             return await ctx.Usuarios.Include(x=>x.IdRolNavigation).FirstOrDefaultAsync(x=>x.Usuario == model.Usuario && x.Contrasena==model.Contrasena);
+        }
+        public async Task<Usuarios?> GetUserIncludeJugadoresPagosAsync(int id)
+        {
+            return ctx.Usuarios.Include(x=>x.Jugador).ThenInclude(x=>x.IdTemporadaNavigation).Include(x=>x.Pago).FirstOrDefault(x => x.IdUsuario == id);
         }
     }
 }

@@ -26,4 +26,6 @@ public partial class Temporada
     public virtual ICollection<Jugador> Jugador { get; set; } = new List<Jugador>();
 
     public virtual ICollection<JugadoresTemporada> JugadoresTemporada { get; set; } = new List<JugadoresTemporada>();
+
+    public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
 }

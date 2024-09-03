@@ -119,6 +119,8 @@ public partial class ClubDeportivoContext : DbContext
 
             entity.HasIndex(e => e.IdJugador, "pago_jugador_FK");
 
+            entity.HasIndex(e => e.IdTemporada, "pago_temporada_FK");
+
             entity.HasIndex(e => e.IdResponsable, "pago_usuarios_FK");
 
             entity.Property(e => e.IdPago).HasColumnType("int(11)");
@@ -126,6 +128,7 @@ public partial class ClubDeportivoContext : DbContext
             entity.Property(e => e.FechaPago).HasColumnType("datetime");
             entity.Property(e => e.IdJugador).HasColumnType("int(11)");
             entity.Property(e => e.IdResponsable).HasColumnType("int(11)");
+            entity.Property(e => e.IdTemporada).HasColumnType("int(11)");
 
             entity.HasOne(d => d.IdJugadorNavigation).WithMany(p => p.Pago)
                 .HasForeignKey(d => d.IdJugador)
@@ -135,6 +138,10 @@ public partial class ClubDeportivoContext : DbContext
             entity.HasOne(d => d.IdResponsableNavigation).WithMany(p => p.Pago)
                 .HasForeignKey(d => d.IdResponsable)
                 .HasConstraintName("pago_usuarios_FK");
+
+            entity.HasOne(d => d.IdTemporadaNavigation).WithMany(p => p.Pago)
+                .HasForeignKey(d => d.IdTemporada)
+                .HasConstraintName("pago_temporada_FK");
         });
 
         modelBuilder.Entity<Registro>(entity =>
