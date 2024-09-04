@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using GestorPagosApi.DTOs;
+using GestorPagosApi.Helpers;
 using GestorPagosApi.Identity;
 using GestorPagosApi.Models.Entities;
 using GestorPagosApi.Models.ViewModels.ResponsableViewModels;
@@ -26,56 +25,40 @@ namespace GestorPagosApi.Controllers
         private readonly RepositoryUsuarios repositoryUsuarios;
         private readonly RepositoryTemporadas repositoryTemporadas;
         private readonly IMapper mapper;
-        private readonly IConverter _converter;
-        private readonly ICompositeViewEngine _viewEngine;
-        private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
+        private readonly PdfHelper pdfHelper;
+        private readonly RepositoryPagos repositoryPagos;
+        // private readonly IConverter _converter;
+        // private readonly ICompositeViewEngine _viewEngine;
+        // private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
 
 
-        public ResponsableViewsController(ITempDataDictionaryFactory tempDataDictionaryFactory, RepositoryUsuarios repositoryUsuarios, RepositoryTemporadas repositoryTemporadas, IMapper mapper, IConverter converter, ICompositeViewEngine viewEngine)
+        public ResponsableViewsController(RepositoryPagos repositoryPagos, RepositoryUsuarios repositoryUsuarios, RepositoryTemporadas repositoryTemporadas, IMapper mapper, PdfHelper pdfHelper)
         {
-            _tempDataDictionaryFactory = tempDataDictionaryFactory;
             this.repositoryUsuarios = repositoryUsuarios;
             this.repositoryTemporadas = repositoryTemporadas;
             this.mapper = mapper;
-            _converter = converter;
-            _viewEngine = viewEngine;
+            this.pdfHelper = pdfHelper;
+            this.repositoryPagos = repositoryPagos;
+            // _tempDataDictionaryFactory = tempDataDictionaryFactory;
+            // _converter = converter;
+            // _viewEngine = viewEngine;
             //DinkToPdf.NativeLibrary.Load("ruta/a/libwkhtmltox.dll");
-            
+
         }
         [AllowAnonymous]
-        [HttpGet("Recibo")]
-        public async Task<IActionResult> GetRecibo()
+        [HttpGet("Recibo/{id:int}")]
+        public async Task<IActionResult> GetRecibo(int id)
         {
-            // Renderizar la vista Razor a HTML
-            var htmlContent = await RenderViewToStringAsync("Recibo");
+            var dato = repositoryPagos.GetByIdIncludeResponsable(id);
+            if (dato == null) return BadRequest();
 
-            // Crear el PDF a partir del HTML
-            var globalSettings = new GlobalSettings
-            {
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Portrait,
-                PaperSize = PaperKind.A4,
-                Margins = new MarginSettings { Top = 10 },
-                DocumentTitle = "Recibo"
+            var dto = new ReciboModel{
+                NumRecibo = dato.IdPago,
+                CantidadPago = dato.CantidadPago,
+                NombreResponsable = dato.IdResponsableNavigation.Nombre,
+                Fecha = dato.FechaPago
             };
-
-            var objectSettings = new ObjectSettings
-            {
-                PagesCount = true,
-                HtmlContent = htmlContent,
-                WebSettings = { DefaultEncoding = "utf-8" }
-            };
-
-            var pdf = new HtmlToPdfDocument()
-            {
-                GlobalSettings = globalSettings,
-                Objects = { objectSettings }
-            };
-
-            var file = _converter.Convert(pdf);
-
-            // Retornar el PDF generado
-            return File(file, "application/pdf", "Recibo.pdf");
+            return Ok(dto);
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -89,7 +72,7 @@ namespace GestorPagosApi.Controllers
             var jugs = user.Jugador.ToList();
             var costototal = user.Jugador.Select(x => x.IdTemporadaNavigation.Costo).Sum();
             var saldopagado = user.Jugador.Select(x => x.IdTemporadaNavigation.Costo - x.Deuda).Sum();
-            var listapagos = user.Pago.Select(x => mapper.Map<HistorialPagos>(x)).ToList();
+            List<HistorialPagos> listapagos = user.Pago.Select(x => mapper.Map<HistorialPagos>(x)).OrderByDescending(x=>x.fechaPago).ToList();
             DashboardResponsableViewModel vm = new DashboardResponsableViewModel()
             {
                 costoTotalTemporada = costototal,
@@ -99,29 +82,29 @@ namespace GestorPagosApi.Controllers
             vm.saldoPendiente = vm.costoTotalTemporada - vm.saldoPagado;
             return Ok(vm);
         }
-        private async Task<string> RenderViewToStringAsync(string viewName)
-        {
-            using (var writer = new StringWriter())
-            {
-                var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
+        // private async Task<string> RenderViewToStringAsync(string viewName)
+        // {
+        //     using (var writer = new StringWriter())
+        //     {
+        //         var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
 
-                if (viewResult.View == null)
-                {
-                    throw new ArgumentNullException($"{viewName} no se encontró.");
-                }
+        //         if (viewResult.View == null)
+        //         {
+        //             throw new ArgumentNullException($"{viewName} no se encontrï¿½.");
+        //         }
 
-                var viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()),
-                    _tempDataDictionaryFactory.GetTempData(ControllerContext.HttpContext),
-                    writer,
-                    new HtmlHelperOptions()
-                );
+        //         var viewContext = new ViewContext(
+        //             ControllerContext,
+        //             viewResult.View,
+        //             new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()),
+        //             _tempDataDictionaryFactory.GetTempData(ControllerContext.HttpContext),
+        //             writer,
+        //             new HtmlHelperOptions()
+        //         );
 
-                await viewResult.View.RenderAsync(viewContext);
-                return writer.GetStringBuilder().ToString();
-            }
-        }
+        //         await viewResult.View.RenderAsync(viewContext);
+        //         return writer.GetStringBuilder().ToString();
+        //     }
+        // }
     }
 }

@@ -56,6 +56,28 @@ namespace GestorPagosApi.Controllers
             var dato = mapper.Map<PagoDTO>(pago);
             return Ok(dato);
         }
+        [HttpPost("Pago")]
+        public async Task<IActionResult> PostPago(PagoDTO pago)
+        {
+            Jugador jugador = repositoryJugadores.Get(pago.idJugador);
+            if (jugador == null) return NotFound();
+
+            if (jugador.Deuda<pago.cantidadPago)
+                return BadRequest("La cantidad de pago sobrepasa la deuda");
+            
+            jugador.Deuda-=pago.cantidadPago;
+            
+            Pago newpago = new();
+            newpago.IdJugador = pago.idJugador;
+            newpago.CantidadPago = pago.cantidadPago;
+            newpago.IdTemporada = jugador.IdTemporada;
+            newpago.IdResponsable = jugador.IdUsuario;
+            newpago.FechaPago = DateTime.UtcNow;
+            repository.Insert(newpago);
+            repositoryJugadores.Update(jugador);
+            return Ok();
+
+        }
         [HttpPost]
         public async Task<IActionResult> PostPagar(PagoDTO pago)
         {

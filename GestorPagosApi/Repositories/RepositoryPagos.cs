@@ -23,5 +23,9 @@ namespace GestorPagosApi.Repositories
         {
             return ctx.Pago.Take(4).Include(x=>x.IdJugadorNavigation).Include(x=>x.IdResponsableNavigation);
         }
+        public Pago? GetByIdIncludeResponsable(int id)
+        {
+            return ctx.Pago.Include(x=>x.IdResponsableNavigation).FirstOrDefault(x=>x.IdPago == id);
+        }
     }
 }
